@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button.convert-btn {
+            flex: 1;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button.convert-btn:hover {
+            background: #5568d3;
+        }
+
+        button.reset-btn {
+            flex: 1;
+            padding: 12px;
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button.reset-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .result-section {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .result-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 30px;
+            word-wrap: break-word;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .card {
+                padding: 30px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .result-value {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Input Card -->
+    <div class="card">
+        <h1 class="title">Unit Converter</h1>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('length')">Length</button>
+            <button class="tab" onclick="switchTab('weight')">Weight</button>
+            <button class="tab" onclick="switchTab('temperature')">Temperature</button>
+        </div>
+
+        <div id="length" class="tab-content active">
+            <div class="form-group">
+                <label>Unit to Convert from</label>
+                <select id="lengthFrom">
+                    <option value="mm">Millimeter (mm)</option>
+                    <option value="cm">Centimeter (cm)</option>
+                    <option value="m">Meter (m)</option>
+                    <option value="km">Kilometer (km)</option>
+                    <option value="in">Inch (in)</option>
+                    <option value="ft" selected>Foot (ft)</option>
+                    <option value="yd">Yard (yd)</option>
+                    <option value="mile">Mile (mile)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Unit to Convert to</label>
+                <select id="lengthTo">
+                    <option value="mm">Millimeter (mm)</option>
+                    <option value="cm" selected>Centimeter (cm)</option>
+                    <option value="m">Meter (m)</option>
+                    <option value="km">Kilometer (km)</option>
+                    <option value="in">Inch (in)</option>
+                    <option value="ft">Foot (ft)</option>
+                    <option value="yd">Yard (yd)</option>
+                    <option value="mile">Mile (mile)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Enter the length to convert</label>
+                <input type="number" id="lengthValue" placeholder="Enter value" step="0.01">
+            </div>
+        </div>
+
+        <div id="weight" class="tab-content hidden">
+
+            <div class="form-group">
+                <label>Unit to Convert from</label>
+                <select id="weightFrom">
+                    <option value="mg">Milligram (mg)</option>
+                    <option value="g">Gram (g)</option>
+                    <option value="kg" selected>Kilogram (kg)</option>
+                    <option value="oz">Ounce (oz)</option>
+                    <option value="lb">Pound (lb)</option>
+                    <option value="ton">Ton (ton)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Unit to Convert to</label>
+                <select id="weightTo">
+                    <option value="mg">Milligram (mg)</option>
+                    <option value="g">Gram (g)</option>
+                    <option value="kg">Kilogram (kg)</option>
+                    <option value="oz">Ounce (oz)</option>
+                    <option value="lb" selected>Pound (lb)</option>
+                    <option value="ton">Ton (ton)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Enter the weight to convert</label>
+                <input type="number" id="weightValue" placeholder="Enter value" step="0.01">
+            </div>
+        </div>
+
+        <div id="temperature" class="tab-content hidden">
+
+            <div class="form-group">
+                <label>Unit to Convert from</label>
+                <select id="tempFrom">
+                    <option value="c" selected>Celsius (°C)</option>
+                    <option value="f">Fahrenheit (°F)</option>
+                    <option value="k">Kelvin (K)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Unit to Convert to</label>
+                <select id="tempTo">
+                    <option value="c">Celsius (°C)</option>
+                    <option value="f" selected>Fahrenheit (°F)</option>
+                    <option value="k">Kelvin (K)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Enter the temperature to convert</label>
+                <input type="number" id="tempValue" placeholder="Enter value" step="0.01">
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="convert-btn" onclick="convert()">Convert</button>
+        </div>
+    </div>
+
+    <!-- Result Card -->
+    <div class="card">
+        <h1 class="title">Unit Converter</h1>
+
+        <div class="result-section">
+            <p class="result-label">Result of your calculation</p>
+            <div class="result-value" id="result">20 ft = 609cm</div>
+            <button class="reset-btn" onclick="reset()">Reset</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentTab = 'length';
+
+    function switchTab(tab) {
+        currentTab = tab;
+        const tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach(t => t.classList.remove('active', 'hidden'));
+
+        const tabButtons = document.querySelectorAll('.tab');
+        tabButtons.forEach(b => b.classList.remove('active'));
+
+        document.getElementById(tab).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    function convert() {
+        let value, from, to, type;
+
+        if (currentTab === 'length') {
+            value = parseFloat(document.getElementById('lengthValue').value);
+            from = document.getElementById('lengthFrom').value.toLowerCase();
+            to = document.getElementById('lengthTo').value.toLowerCase();
+            type = 'length';
+        } else if (currentTab === 'weight') {
+            value = parseFloat(document.getElementById('weightValue').value);
+            from = document.getElementById('weightFrom').value.toLowerCase();
+            to = document.getElementById('weightTo').value.toLowerCase();
+            type = 'weight';
+        } else if (currentTab === 'temperature') {
+            value = parseFloat(document.getElementById('tempValue').value);
+            from = document.getElementById('tempFrom').value.toLowerCase();
+            to = document.getElementById('tempTo').value.toLowerCase();
+            type = 'temperature';
+        }
+
+        if (isNaN(value)) {
+            document.getElementById('result').textContent = 'Please enter a valid number';
+            return;
+        }
+
+        // Send request to Java server
+        const requestData = {
+            value: value,
+            from: from,
+            to: to,
+            type: type
+        };
+
+        fetch('/api/convert', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('result').textContent = data.display;
+            } else {
+                document.getElementById('result').textContent = 'Error: ' + (data.error || 'Conversion failed');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('result').textContent = 'Error: Cannot connect to server.';
+        });
+    }
+
+    function reset() {
+        document.getElementById('lengthValue').value = '';
+        document.getElementById('weightValue').value = '';
+        document.getElementById('tempValue').value = '';
+        document.getElementById('result').textContent = '20 ft = 609cm';
+    }
+</script>
+</body>
+</html>
